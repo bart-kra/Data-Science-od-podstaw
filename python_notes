@@ -1,0 +1,92 @@
+1. PYTHON
+1.1 Słowniki
+- lepszy zapis: d = {}
+- d = {'Bartek':20} - literał słownikowy
+- bartek_has_value = 'Bartek' in d -> szybki sposób sprawdzania, czy klucz istnieje w słowniku
+- wyciąganie wartości ze słownika - najlepiej metodą get, która zwraca wartość domyślną w przypadu nulla: score = d.get('Bartek', 0) -> zwraca 20 ale gdyby klucz nie istniał - zwróci 0, gdy brak drugiego argumentu - zwróci None
+- items = d.items() - lista krotek (klucz, wartość)
+
+1.2 defaultdict
+- from collections import defaultdict
+- w pierwszej kolejności ustawienie generatora: count - defaultdict(list) - generuje w słowniku puste wartości w formie listy (można zamiast listy cokolwiek innego, w tym funkcję), np.:
+  word_counts = defaultdict(int) -> przy dodawaniu klucza zasetuje wartość int(0)
+  for word in document:
+    word_counts[word] += 1 (zliczenie słów w dokumencie (liście słów)),
+
+  # Słownik słowników:
+  dd_dict = defaultdict(dict)
+  dd_dict['Bartek']['City'] = 'Warszawa' -> {'Bartek': {'City' : 'Warszawa}}
+
+1.3 Counter
+- funkcja tworzy obiekt podobnty do defaultdict(int) mapując klucze do liczby wystąpień
+- from collections import Counter
+- np.:
+  c = Counter([1,2,3,0,3,3,1,2]) -> {0 : 1, 1 : 2, 2 : 2, 3 : 3}
+
+  # Rozwiązanie problemu ze zliczaniem słów z wykorzystaniem fukncji Counter:
+  word_counts = Counter(document)
+
+- obiekt Counter (powstały po zastosowaniu funkcji Counter) ma metodą most_common(n), wybierającą n najczęściej występujących elementów.
+
+1.4 Nulle
+- Funkcję 'pierwsza niepusta' można zapisać jako: a and b (jeżeli a będzie nullem (wartość logiczna False) a b liczbą (wartość logiczna True) to 'a and b' zwróci wartość b, np.:
+  a, b, c = np.nan, np.nan, 4
+  print(a and b and c + 6) -> zwróci wartość 10
+
+1.5 Sortowanie
+- metoda sort() sortuje inplace (w miejscu) - zmienia listę sortowaną
+- aby nie zmienić listy sortowanej można użyć funkcji sorted(): y = sorted(x)
+- metoda sort() domyślnie sortuje w kolejności rosnącej, aby posortować odwrotnie ustawia się parametr reverse=True
+- zamiast porównywać same elementy można z użyciem słowa kluczowego key podać funkcję, np.:
+  x = sorted([-3, 4, -1, 3, 6], key=abs, reverse=True) -> zwróci: [-1, -3, 3, 4, 6]
+
+1.6 Składanie list
+- a = [x ** 2 for x in range(1, 11) if x ** 2 % 3 == 0] -> zwraca [9, 36, 81]
+- jeżeli watość z listy nas nie interesuje używamy _, np.:
+  zeros = [0 for _ in a] -> zwraca [0, 0, 0]
+- składanie wielu instrukcji for, np.:
+  a = [(x, y, z)
+    for x in range(0, 10)
+    for y in range(0, 10)
+    for z in range(0, 10)] -> zwraca współrzędne punktów (0, 0, 0), (5, 5, 5), ..., (9, 9, 9)
+
+1.7 Assert
+- instrukcja assert sprawdza, czy funkcja zwraca poprawny wynik, np.:
+  assert 0 == 1 -> zwróci błąd AssertionError
+  assert 0 == 1, '0 != 1' -> zwróci AssertionError o treści: '0 != 1'
+- instrukcja przydatna w testach, np.:
+  def smallest_item(x):
+    return min(x)
+  assert (smallest_item([1,4,0,7,4]) == 0 -> sprawdza poprawność działania napisanej funkcji
+
+1.8 Generatory - TO DO
+
+1.9 Zip
+- funkcja zip pozwala pakować listy w listy krotek, np.:
+  a = [1, 2, 3]
+  b = ['a', 'b', 'c']
+  c = zip(a, b) -> zwraca [(1, 'a'), (2, 'b'), (3, 'c')]
+- operację odwrotną można przeprowadzić używając *, np.:
+  a, b = zip(*c)
+
+1.10 Argumenty nazwane i nienazwane
+- *args i **kwargs - umożliwiają przyjęcie dowolnej liczby nienazwanych argumentów (*args) lub nazwanych (**kwargs), np.:
+  def x(*args, **kwargs):
+    print('args: ', args)
+    print('kwargs: ', kwargs)
+  x(1, 2, 3, d=4, e=5) -> zwraca args:  (1, 2, 3), kwargs:  {'d': 4, 'e': 5}
+
+1.11 Adnotacje typów
+- Python jest językiem dynamicznie typowanym, tzn. nie zwraca uwagi na typ obiektów, dopóki są poprawnie wykorzystywane
+- Python od wersji 3.6 umożliwia statyczne typowanie, np.:
+  from typing import Union  
+  def x(a: Union(float, int), b: Union(float, int)) -> Union(float, int):
+    return a * b
+- adnotacje typów pełnią jedynie funkcję informacyjną, poprawiają czytelność i zrozumienie kodu - nie wpływają na dynamiczność typów
+- używanie adnotacji typów umożliwia IDE stosowanie autouzupełniania i ostrzegania przed błędami typów
+- moduł typing pozwala dokładniej precyzować typy, np.:
+  from typing import List, Dict, Tuple, Iterable
+  def x(a: List[str]) -> str:
+    return a.split(' ')
+- z użyciem modułu typing można również określać typy zmiennych, np.:
+  a: List[int]
